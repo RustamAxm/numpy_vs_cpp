@@ -19,7 +19,7 @@ def generate_bin():
             out = np.row_stack((out, tmp))
     out_bin_ = out.tobytes()
 
-    with open('out.bin', 'wb') as file:
+    with open('../out.bin', 'wb') as file:
         file.write(out_bin_ * 100)
 
 

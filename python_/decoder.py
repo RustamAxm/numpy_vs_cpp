@@ -83,7 +83,7 @@ if __name__ == '__main__':
 
     out = benchmark(simple_decode)(bin_in)
 
-    out_2 = benchmark(multiproc_decode)(bin_in)
+    # out_2 = benchmark(multiproc_decode)(bin_in)
 
-    # save_np(f'out.txt', out)
+    save_np(f'out.txt', out)
     # save_np(f'out2.txt', out_2)

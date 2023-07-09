@@ -1,4 +1,5 @@
 # np decode tests
+## simple numpy vs multiproc python + numpy
 logs
 ```bash
 start find header 0xab
@@ -15,3 +16,26 @@ start find header 0xab
 start find header 0xab
 multiproc_decode runtime: 1.838379 s
 ```
+
+## simple cpp vs simple numpy python
+logs
+```bash
+rustam@rustam-ZenBook:~/np_decoder$ time python3 python_/decoder.py 
+start find header 0xab
+simple_decode runtime: 0.262674 s
+
+real    0m3,192s
+user    0m2,850s
+sys     0m0,455s
+rustam@rustam-ZenBook:~/np_decoder$ cd cpp_/cmake-build-debug/
+rustam@rustam-ZenBook:~/np_decoder/cpp_/cmake-build-debug$ time ./np_decoder 
+start decode
+21000000
+
+real    0m2,034s
+user    0m0,556s
+sys     0m1,476s
+
+```
+
+
