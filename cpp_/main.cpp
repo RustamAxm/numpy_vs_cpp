@@ -5,6 +5,9 @@
 #include <fstream>
 #include <vector>
 #include <chrono>
+#include <thread>
+
+#include "log_duration.h"
 
 #pragma pack(1)
 struct pocket_struct {
@@ -53,20 +56,43 @@ std::ofstream & operator << (std::ofstream & file, const std::vector<pocket_stru
     return file;
 }
 
+
 int main() {
     std::string file_name = "../../out.bin";
-    auto start = std::chrono::high_resolution_clock::now();
-
     auto buffer = getBufferFromFile(file_name);
-    auto decoded_ = getDecoded(buffer);
 
-    auto stop = std::chrono::high_resolution_clock::now();
-    std::cout << "Duration: " << std::chrono::duration_cast <std::chrono::milliseconds> (stop - start).count()
-    << " ms" << std::endl;
+    LOG_DURATION("simple impl");
+    {
+        auto decoded_ = getDecoded(buffer);
+        std::ofstream out_file("../../out_cpp.txt");
+        out_file << decoded_ ;
+        out_file.close();
+    }
 
-    std::ofstream out_file("../../out_cpp.txt");
-    out_file << decoded_ ;
-    out_file.close();
+    LOG_DURATION("thread impl");
+    {
+        size_t len_ = buffer.size() / 2;
+        std::vector<char> hi_(buffer.begin(), buffer.begin() + len_);
+        std::vector<char> lo_(buffer.begin() + len_, buffer.end());
+
+        std::vector<pocket_struct> decode_1;
+        std::vector<pocket_struct> decode_2;
+
+        std::thread th_1 ([&] () {
+            decode_1 = getDecoded(hi_);
+        });
+
+        std::thread th_2 ([&] () {
+            decode_2 = getDecoded(lo_);
+        });
+        th_1.join();
+        th_2.join();
+
+        decode_1.insert(decode_1.end(), decode_2.begin(), decode_2.end());
+        std::ofstream out_file("../../out_th_cpp.txt");
+        out_file << decode_1 ;
+        out_file.close();
+    }
 
     return 0;
 }
