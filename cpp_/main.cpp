@@ -6,6 +6,7 @@
 #include <vector>
 #include <chrono>
 #include <thread>
+#include <future>
 
 #include "log_duration.h"
 
@@ -61,13 +62,15 @@ int main() {
     std::string file_name = "../../out.bin";
     auto buffer = getBufferFromFile(file_name);
 
-    LOG_DURATION("simple impl");
+
     {
+        LOG_DURATION("simple impl");
         auto decoded_ = getDecoded(buffer);
     }
 
-    LOG_DURATION("thread impl");
+
     {
+        LOG_DURATION("thread impl");
         size_t len_ = buffer.size() / 2;
         std::vector<char> hi_(buffer.begin(), buffer.begin() + len_);
         std::vector<char> lo_(buffer.begin() + len_, buffer.end());
@@ -85,6 +88,23 @@ int main() {
         th_1.join();
         th_2.join();
 
+        decode_1.insert(decode_1.end(), decode_2.begin(), decode_2.end());
+    }
+
+
+    {
+        LOG_DURATION("async impl");
+        size_t len_ = buffer.size() / 2;
+        std::vector<char> hi_(buffer.begin(), buffer.begin() + len_);
+        std::vector<char> lo_(buffer.begin() + len_, buffer.end());
+
+        std::vector<pocket_struct> decode_1;
+        std::vector<pocket_struct> decode_2;
+
+        auto ft_1 = std::async(std::launch::async, [&hi_] { return getDecoded(hi_);});
+        auto ft_2 = std::async(std::launch::async, [&lo_] { return getDecoded(lo_);});
+        decode_1 = ft_1.get();
+        decode_2 = ft_2.get();
         decode_1.insert(decode_1.end(), decode_2.begin(), decode_2.end());
     }
 
