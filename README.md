@@ -29,13 +29,13 @@ user    0m2,850s
 sys     0m0,455s
 rustam@rustam-ZenBook:~/np_decoder$ cd cpp_/cmake-build-debug/
 rustam@rustam-ZenBook:~/np_decoder/cpp_/cmake-build-debug$ time ./np_decoder 
-start decode
-21000000
+Duration: 78 ms
 
-real    0m2,034s
-user    0m0,556s
-sys     0m1,476s
+real    0m2,053s
+user    0m0,431s
+sys     0m1,536s
 
 ```
+
 
 
