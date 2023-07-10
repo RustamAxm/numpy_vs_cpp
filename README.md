@@ -36,6 +36,17 @@ user    0m0,431s
 sys     0m1,536s
 
 ```
+Thread implements added 
+```bash
+rustam@rustam-ZenBook:~/np_decoder/cpp_/cmake-build-debug$ time ./np_decoder 
+thread impl: 78 ms
+simple impl: 139 ms
+
+real    0m0,167s
+user    0m0,141s
+sys     0m0,065s
+
+```
 
 
 

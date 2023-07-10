@@ -64,9 +64,6 @@ int main() {
     LOG_DURATION("simple impl");
     {
         auto decoded_ = getDecoded(buffer);
-        std::ofstream out_file("../../out_cpp.txt");
-        out_file << decoded_ ;
-        out_file.close();
     }
 
     LOG_DURATION("thread impl");
@@ -89,9 +86,6 @@ int main() {
         th_2.join();
 
         decode_1.insert(decode_1.end(), decode_2.begin(), decode_2.end());
-        std::ofstream out_file("../../out_th_cpp.txt");
-        out_file << decode_1 ;
-        out_file.close();
     }
 
     return 0;
