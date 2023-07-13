@@ -47,6 +47,18 @@ std::vector<pocket_struct> getDecoded(std::vector <char> & buffer) {
     return out_vector;
 }
 
+std::vector<pocket_struct> & getDecodedFullCast(std::vector <char> & buffer) {
+
+    for (size_t i = 0; i < buffer.size(); i++) {
+        uint8_t tmp = buffer[i];
+
+        if (tmp == 0xab) {
+            auto decoded = reinterpret_cast<std::vector<pocket_struct> * > (&buffer);
+            return *decoded;
+        }
+    }
+}
+
 std::ofstream & operator << (std::ofstream & file, const std::vector<pocket_struct> & decoded) {
     for (auto x : decoded) {
         file << unsigned (x.header) << " "
@@ -66,6 +78,11 @@ int main() {
     {
         LOG_DURATION("simple impl");
         auto decoded_ = getDecoded(buffer);
+    }
+
+    {
+        LOG_DURATION("simple full cast impl");
+        auto decoded_ = getDecodedFullCast(buffer);
     }
 
 
